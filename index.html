@@ -74,10 +74,10 @@
 </footer>
 
 <script>
-const scriptURL = 'https://script.google.com/macros/s/AKfycbygkrFe_IzXVxPEwGFkW_ouuSrKPbgY5_K7rE8satlDFsn2hXhyGulUStKjFho6RVHx/exec'; // Your Apps Script Web App URL
+const apiURL = 'https://script.google.com/macros/s/AKfycbygkrFe_IzXVxPEwGFkW_ouuSrKPbgY5_K7rE8satlDFsn2hXhyGulUStKjFho6RVHx/exec';
 
 // Load Donors
-fetch(`${scriptURL}?type=donors`)
+fetch(`${apiURL}?type=donors`)
   .then(res => res.json())
   .then(data => {
     const tbody = document.getElementById("donorTableBody");
@@ -90,14 +90,15 @@ fetch(`${scriptURL}?type=donors`)
         uniqueGroups[donor.blood_group] = true;
         shown++;
 
-        const img = `<img src="${donor.image}" width="70" height="70" alt="Donor" class="donor-table-image">`;
+        // Fix image URL (if relative)
+        const imgSrc = donor.image.startsWith('http') ? donor.image : `uploads/${encodeURIComponent(donor.image)}`;
+        const img = `<img src="${imgSrc}" width="70" height="70" alt="Donor" class="donor-table-image">`;
         const name = donor.name;
         const blood = donor.blood_group;
 
-        // Format contact links
         const fb = donor.facebook_id || "";
-        let messenger_id = fb.split("facebook.com/").pop();
-        let whatsapp = donor.contact.replace(/\D/g, "");
+        const messenger_id = fb.split("facebook.com/").pop();
+        const whatsapp = donor.contact.replace(/\D/g, "");
 
         const contacts = `
           <a href="https://m.me/${messenger_id}" target="_blank" title="Messenger">
@@ -120,33 +121,58 @@ fetch(`${scriptURL}?type=donors`)
         tbody.innerHTML += row;
       }
     });
+
+    if(shown === 0) {
+      tbody.innerHTML = '<tr><td colspan="4">No donors found.</td></tr>';
+    }
+  })
+  .catch(() => {
+    document.getElementById("donorTableBody").innerHTML = '<tr><td colspan="4">Failed to load donors.</td></tr>';
   });
 
 // Load Posts
-fetch(`${scriptURL}?type=posts`)
+fetch(`${apiURL}?type=posts`)
   .then(res => res.json())
   .then(data => {
     const postContainer = document.getElementById("latestPosts");
     postContainer.innerHTML = "";
+    if(!data.length){
+      postContainer.innerHTML = '<p style="text-align:center;">No posts found.</p>';
+      return;
+    }
     data.slice(0, 4).forEach((post, index) => {
+      const imgSrc = post.image.startsWith('http') ? post.image : `uploads/${encodeURIComponent(post.image)}`;
       const div = `
         <div class="latest-post">
-          <img src="${post.image}" alt="Post Image">
+          <img src="${imgSrc}" alt="Post Image" />
           <h3>Donate No: ${index + 1}</h3>
           <p>${post.text.substring(0, 50)}...</p>
         </div>`;
       postContainer.innerHTML += div;
     });
+  })
+  .catch(() => {
+    document.getElementById("latestPosts").innerHTML = '<p style="text-align:center;">Failed to load posts.</p>';
   });
 
-// Visitor Counter (Local Example)
-if (!localStorage.getItem("visited")) {
-  localStorage.setItem("visited", "yes");
-  // Optionally notify server (Google Sheets) here
-}
-document.getElementById("visitorCount").textContent = Math.floor(Math.random() * 2000 + 100); // Fake count
+// Visitor Count (Basic implementation: localStorage + display)
+const visitorCountEl = document.getElementById('visitorCount');
+
+fetch(`${apiURL}?type=visitors`)
+  .then(res => res.json())
+  .then(data => {
+    visitorCountEl.textContent = data.count || '0';
+  })
+  .catch(() => {
+    // fallback to localStorage
+    if (!localStorage.getItem("visited")) {
+      localStorage.setItem("visited", "yes");
+    }
+    visitorCountEl.textContent = Math.floor(Math.random() * 2000 + 100); // fallback number
+  });
 
 </script>
+
 <script src="script.js"></script>
 </body>
 </html>
