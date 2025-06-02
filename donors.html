@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>চাঁভালি রক্ত ফাউন্ডেশন</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.maateen.me/kalpurush/font.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+
+<header>
+  <div class="logo-container">
+    <img src="media/logo.jpg" alt="Logo" class="logo" />
+    <h1 class="website-name">চাঁভালি রক্ত ফাউন্ডেশন</h1>
+  </div>
+  <nav>
+    <button id="menu-toggle" class="menu-toggle">☰</button>
+    <ul class="menu" id="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="donors.html">Donors</a></li>
+      <li><a href="register.html">Register</a></li>
+      <li><a href="posts.html">Posts</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Filter -->
+<div class="filter-container">
+  <form id="filterForm">
+    <label for="blood_group">Filter Donor:</label>
+    <select name="blood_group" id="blood_group">
+      <option value="">All Blood Groups</option>
+      <option value="A+">A+</option>
+      <option value="A-">A-</option>
+      <option value="B+">B+</option>
+      <option value="B-">B-</option>
+      <option value="O+">O+</option>
+      <option value="O-">O-</option>
+      <option value="AB+">AB+</option>
+      <option value="AB-">AB-</option>
+    </select>
+    <button type="submit">Filter</button>
+  </form>
+</div>
+
+<!-- Donor List -->
+<div class="donor-list" id="donorList">
+  <p>Loading donors...</p>
+</div>
+
+<script>
+const apiUrl = "https://script.google.com/macros/s/AKfycbygkrFe_IzXVxPEwGFkW_ouuSrKPbgY5_K7rE8satlDFsn2hXhyGulUStKjFho6RVHx/exec"; // Replace with your Apps Script Web App URL
+
+function loadDonors(bloodGroup = "") {
+  const url = bloodGroup ? `${apiUrl}?blood_group=${bloodGroup}` : apiUrl;
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("donorList");
+      container.innerHTML = "";
+
+      if (data.length === 0) {
+        container.innerHTML = "<p class='no-donors'>No donors found for this blood group.</p>";
+        return;
+      }
+
+      data.forEach(donor => {
+        // Facebook Messenger ID extraction
+        let messengerId = "";
+        try {
+          const url = new URL(donor.facebook_id);
+          if (url.searchParams.get("id")) {
+            messengerId = url.searchParams.get("id");
+          } else {
+            messengerId = url.pathname.replace("/", "");
+          }
+        } catch (e) {}
+
+        const whatsapp = donor.contact.replace(/\D/g, "");
+
+        const card = document.createElement("div");
+        card.className = "donor-card";
+        card.innerHTML = `
+          <img src="doner img/${donor.image}" alt="Donor Image" class="donor-image">
+          <p class="ready-text">Ready to donate Blood</p>
+          <div class="donor-info">
+            <h3><strong>Name: </strong>${donor.name}</h3>
+            <p><strong>Blood Group:</strong> ${donor.blood_group}</p>
+            <p><strong>Last Donation:</strong> ${donor.last_donation}</p>
+            <p class='contact-icons'><strong>Contact:
+              <a href='https://m.me/${messengerId}' target='_blank' title='Messenger'>
+                <i class='fa-brands fa-facebook-messenger fa-xl' style='color: #0548e6;'></i>
+              </a>
+              <a href='https://wa.me/+88${whatsapp}' target='_blank' title='WhatsApp'>
+                <i class='fa-brands fa-whatsapp fa-xl' style='color: #0dce7b;'></i>
+              </a>
+              <a href='tel:+88${donor.contact}' title='Call'>
+                <i class='fa-solid fa-phone fa-xl' style='color: #ff0000;'></i>
+              </a>
+            </strong></p>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    });
+}
+
+// On load
+loadDonors();
+
+// Filter form event
+document.getElementById("filterForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const bloodGroup = document.getElementById("blood_group").value;
+  loadDonors(bloodGroup);
+});
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>
