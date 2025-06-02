@@ -114,41 +114,39 @@
 </div>
 
 <script>
-  const form = document.getElementById("donorForm");
-  const popup = document.getElementById("popup");
-  const overlay = document.getElementById("overlay");
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector("form");
+  const apiURL = 'https://script.google.com/macros/s/AKfycbygkrFe_IzXVxPEwGFkW_ouuSrKPbgY5_K7rE8satlDFsn2hXhyGulUStKjFho6RVHx/exec';
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const formData = new FormData(form);
-    const postData = new URLSearchParams();
-
-    for (const [key, value] of formData.entries()) {
-      postData.append(key, value);
-    }
+    const donorData = {};
+    formData.forEach((value, key) => {
+      donorData[key] = value.trim();
+    });
 
     try {
-      const response = await fetch("https://script.google.com/macros/s/AKfycbygkrFe_IzXVxPEwGFkW_ouuSrKPbgY5_K7rE8satlDFsn2hXhyGulUStKjFho6RVHx/exec", {
+      const response = await fetch(apiURL, {
         method: "POST",
-        body: postData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "register", data: donorData }),
       });
 
-      const result = await response.text();
-      console.log(result);
-
       if (response.ok) {
-        popup.style.display = "block";
-        overlay.style.display = "block";
+        alert("Registration successful! Thank you for joining.");
         form.reset();
       } else {
-        alert("❌ Registration failed. Please try again.");
+        alert("Registration failed. Please try again.");
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("❌ Error submitting form.");
+      alert("An error occurred. Please try again later.");
+      console.error(error);
     }
   });
+});
+
 
   function closePopup() {
     popup.style.display = "none";
