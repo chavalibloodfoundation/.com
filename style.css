@@ -1,0 +1,583 @@
+/* General Styling */ 
+body { 
+    text-align: center; 
+    margin: 0; 
+    padding: 0; 
+    font-family: Arial, sans-serif;
+}
+
+/* Header Styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #d32f2f;
+    padding: 15px 20px;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1000;
+}
+
+/* Logo and Website Name */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+.logo-container h1 {
+    margin: 0;
+}
+.website-name {
+    font-family: 'Kalpurush', sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* Navigation Menu */
+nav {
+    position: relative;
+    right: 15px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav ul li a:hover,
+nav ul li a:focus {
+    background: white;
+    color: #d32f2f;
+    outline: none;
+}
+
+/* Menu Toggle Button for Mobile */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+    margin-left: 15px;
+    user-select: none;
+    transition: color 0.3s ease;
+}
+
+.menu-toggle:hover,
+.menu-toggle:focus {
+    color: #fff8f8;
+    outline: none;
+}
+
+/* Show toggle only on mobile, <= 576px */
+@media (max-width: 576px) {
+    .menu-toggle {
+        display: block;
+    }
+}
+
+/* Responsive Styles */
+@media (min-width: 577px) and (max-width: 768px) {
+    header {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .logo-container {
+        display: flex;
+        align-items: center;
+        margin-right: 20px; /* space after logo + site name */
+    }
+
+    .website-name {
+        font-size: 20px !important;
+        margin-right: 30px; /* space between website name and nav */
+        white-space: nowrap; /* prevent breaking */
+    }
+    nav {
+        flex-grow: 1;
+        text-align: right; /* align nav to right */
+    }
+    .logo {
+        width: 55px !important;
+        height: 55px !important;
+    }
+    nav ul {
+        display: flex !important;
+        flex-direction: row !important;
+        position: static !important;
+        max-height: none !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        background: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: auto !important;
+        transition: none !important;
+        justify-content: flex-end; /* align menu items right */
+    }
+    nav ul li {
+        margin: 0 12px !important;
+        border-top: none !important;
+        text-align: center !important;
+    }
+    .menu-toggle {
+        display: none !important; /* hide toggle button on tablet */
+
+    }
+}
+
+/* Tablet (577px - 768px): always show menu, no toggle button */
+@media (min-width: 577px) and (max-width: 768px) {
+    nav ul {
+        display: flex !important;       /* show menu horizontally */
+        flex-direction: row !important; /* horizontal */
+        position: static !important;    /* remove absolute positioning */
+        max-height: none !important;    /* no max height */
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        background: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: auto !important;
+        transition: none !important;
+    }
+    nav ul li {
+        margin: 0 12px !important; /* slightly tighter spacing */
+        border-top: none !important;
+        text-align: center !important;
+    }
+    /* Hide toggle button on tablet */
+    .menu-toggle {
+        display: none !important;
+    }
+    /* Adjust logo and site name size for tablet */
+    .logo {
+        width: 55px !important;
+        height: 55px !important;
+    }
+    .website-name {
+        font-size: 20px !important;
+    }
+}
+
+/* Mobile (<=576px): toggle visible, menu hidden by default, smooth open/close */
+@media (max-width: 576px) {
+    nav ul {
+        flex-direction: column !important;
+        width: 87px !important;
+        background: #0000008c;
+        position: absolute !important;
+        top: 69px !important;
+        left: 0 !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2) !important;
+        border-radius: 0 0 10px 10px !important;
+        overflow: hidden !important;
+        max-height: 0 !important;
+        transition: max-height 0.4s ease, opacity 0.4s ease !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        z-index: 999 !important;
+    }
+    nav ul.active {
+        max-height: 500px !important; /* enough for menu items */
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+    nav ul li {
+        margin: 0 !important;
+        text-align: left !important;
+        border-top: 1px solid rgba(255,255,255,0.3) !important;
+    }
+    nav ul li:first-child {
+        border-top: none !important;
+    }
+    nav ul li a {
+        display: block !important;
+        padding: 10px 10px !important;
+        font-size: 15px !important;
+    }
+    .menu-toggle {
+        max-height: 500px !important; /* enough for toggle button */
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+    
+}
+@media (max-width: 409px) {
+    .website-name {
+        font-size: 22px !important;
+    }
+    
+}
+@media (max-width: 320px) {
+    .website-name {
+        font-size: 18px !important;
+    }
+    
+}
+/* Slideshow */
+.slideshow-container {
+    position: relative;
+    max-width: 95%;
+    margin: auto;
+    text-align: center;
+}
+
+.slide {
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.slide-img {
+    width: 30%;
+    height: 400px;
+    margin: 5px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* Fade Animation */
+.fade {
+    animation: fadeEffect 1.5s;
+}
+
+@keyframes fadeEffect {
+    from { opacity: 0.4; }
+    to { opacity: 1; }
+}
+
+/* Donors List */
+.donors-container {
+    margin: 30px auto;
+    max-width: 100%;
+    text-align: center;
+}
+
+.donor-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.donor-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.donor-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: scale-down;
+}
+
+@media (max-width: 320px) {
+    .hide-on-small {
+        display: none !important;
+    }
+    .donor-table-image{
+        height: 40px !important;
+        width: 40px !important;
+    }
+}
+@media (min-width: 321px) and (max-width: 720px) {
+    .donor-table-image{
+        height: 50px !important;
+        width: 50px !important;
+    }
+    .slide-img{
+        height: 250px !important;
+    }
+    .latest-post img {
+        object-fit: scale-down !important;
+        height: 200px !important;
+    }
+    .fa-xl {
+        font-size: 1.2rem !important; /* or whatever smaller size you want */
+        }
+}
+
+
+/* Filter Form */
+.filter-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.filter-container select,
+.filter-container button {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.filter-container button {
+    background-color: #d9534f;
+    color: white;
+    cursor: pointer;
+}
+
+/* Donor Card */
+.donor-card {
+    width: 280px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-align: center;
+    padding: 15px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+.donor-info {
+    text-align: left;
+}
+
+.donor-info strong {
+    font-size: 18px;
+    color: #d32f2f;
+}
+.donor-info h3 {
+    color: #0002ff;
+}
+
+.donor-info p {
+    font-size: 18px;
+    color: #333;
+}
+.no-donors {
+    text-align: center;
+    font-size: 18px;
+    color: #d9534f;
+    padding: 15px;
+}
+
+/* "Ready to Donate Blood" Text */
+.ready-text {
+    color: green;
+    font-weight: bold;
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+/* Donor Register */
+.register-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.register-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.register-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.register-container input[type="text"], 
+.register-container input[type="date"], 
+.register-container input[type="file"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.register-container button {
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.register-container button:hover {
+    background-color: #218838;
+}
+
+/* Blood Group Dropdown */
+.register-container select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Admin Login */
+.login-container {
+    width: 30%;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    text-align: center;
+    background: #f9f9f9;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+.login-container button {
+    background: #d9534f;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Admin Dashboard */
+.admin-menu {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.admin-menu a {
+    display: inline-block;
+    background: #d9534f;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    margin: 10px;
+}
+
+/* Donor Table */
+.donor-table {
+    width: 100%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.donor-table thead {
+    background-color: #d32f2f;
+    color: white;
+}
+
+.donor-table th, .donor-table td {
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.donor-table th {
+    font-size: 18px;
+}
+
+.donor-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.donor-table tbody tr:hover {
+    background-color: #ffe5e5; /* Light red hover effect */
+}
+
+/* Donor Image */
+.donor-table-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #d32f2f;
+}
+
+/* No Donors Message */
+.no-donors {
+    text-align: center;
+    font-size: 18px;
+    color: #d9534f;
+    padding: 15px;
+}
+
+/* Latest post section */
+.latest-posts {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: stretch;
+    margin: 20px auto;
+    max-width: 1200px;
+    gap: 15px;
+}
+
+.latest-post {
+    width: calc(25% - 30px);
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    background: #00e1ff;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.latest-post img {
+    height: 290px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Responsive adjustment for latest posts */
+@media (max-width: 992px) {
+    .latest-post {
+        width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 576px) {
+    .latest-post {
+        width: 100%;
+    }
+    .slide {
+        justify-content: center !important;
+    }
+}

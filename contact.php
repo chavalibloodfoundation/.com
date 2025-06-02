@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.maateen.me/kalpurush/font.css" rel="stylesheet">
+    </head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <img src="media/logo.jpg" alt="Logo" class="logo">
+            <h1 class="website-name">চাঁভালি রক্ত ফাউন্ডেশন</h1>
+        </div>
+
+        <!-- Responsive Nav -->
+        <nav>
+            <button id="menu-toggle" class="menu-toggle">☰</button>
+            <ul class="menu" id="nav-menu">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="donors.php">Donors</a></li>
+                <li><a href="register.php">Register</a></li>
+                <li><a href="posts.php">Posts</a></li>
+                <li><a href="contact.php">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+
+
+    
+        <script src="script.js"></script>
+</body>
+</html>
