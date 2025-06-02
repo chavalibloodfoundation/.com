@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>চাঁভালি রক্ত ফাউন্ডেশন</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.maateen.me/kalpurush/font.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo-container">
+    <img src="media/logo.jpg" alt="Logo" class="logo" />
+    <h1 class="website-name">চাঁভালি রক্ত ফাউন্ডেশন</h1>
+  </div>
+  <nav>
+    <button id="menu-toggle" class="menu-toggle">☰</button>
+    <ul class="menu" id="nav-menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="donors.html">Donors</a></li>
+      <li><a href="register.html">Register</a></li>
+      <li><a href="posts.html">Posts</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Slideshow -->
+<div class="slideshow-container">
+  <div class="slide fade">
+    <img src="images/slide.png" class="slide-img" />
+    <img src="images/slide.png" class="slide-img" />
+    <img src="images/slide.png" class="slide-img" />
+  </div>
+</div>
+
+<!-- Available Donors -->
+<div class="donors-container">
+  <h2>Available Donors</h2>
+  <div class="donor-list">
+    <table class="donor-table">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Blood Group</th>
+          <th>Contacts</th>
+        </tr>
+      </thead>
+      <tbody id="donorTableBody">
+        <tr><td colspan="4">Loading donors...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Latest Posts -->
+<h2 style="text-align: center;">Latest Posts</h2>
+<div class="latest-posts" id="latestPosts">
+  <p style="text-align:center;">Loading posts...</p>
+</div>
+
+<!-- Visitor Counter -->
+<footer>
+  <p>Total Visitors: <strong id="visitorCount">...</strong></p>
+</footer>
+
+<script>
+const scriptURL = 'https://script.google.com/macros/s/AKfycbygkrFe_IzXVxPEwGFkW_ouuSrKPbgY5_K7rE8satlDFsn2hXhyGulUStKjFho6RVHx/exec'; // Your Apps Script Web App URL
+
+// Load Donors
+fetch(`${scriptURL}?type=donors`)
+  .then(res => res.json())
+  .then(data => {
+    const tbody = document.getElementById("donorTableBody");
+    tbody.innerHTML = "";
+    const uniqueGroups = {};
+    let shown = 0;
+
+    data.forEach(donor => {
+      if (!uniqueGroups[donor.blood_group] && shown < 8) {
+        uniqueGroups[donor.blood_group] = true;
+        shown++;
+
+        const img = `<img src="${donor.image}" width="70" height="70" alt="Donor" class="donor-table-image">`;
+        const name = donor.name;
+        const blood = donor.blood_group;
+
+        // Format contact links
+        const fb = donor.facebook_id || "";
+        let messenger_id = fb.split("facebook.com/").pop();
+        let whatsapp = donor.contact.replace(/\D/g, "");
+
+        const contacts = `
+          <a href="https://m.me/${messenger_id}" target="_blank" title="Messenger">
+            <i class="fa-brands fa-facebook-messenger fa-xl" style="color: #0548e6;"></i>
+          </a>
+          <a href="https://wa.me/+88${whatsapp}" target="_blank" title="WhatsApp">
+            <i class="fa-brands fa-whatsapp fa-xl" style="color: #0dce7b;"></i>
+          </a>
+          <a href="tel:+88${donor.contact}">
+            <i class="fa-solid fa-phone fa-xl" style="color: #ff0000;"></i>
+          </a>
+        `;
+
+        const row = `<tr>
+          <td>${img}</td>
+          <td>${name}</td>
+          <td>${blood}</td>
+          <td>${contacts}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      }
+    });
+  });
+
+// Load Posts
+fetch(`${scriptURL}?type=posts`)
+  .then(res => res.json())
+  .then(data => {
+    const postContainer = document.getElementById("latestPosts");
+    postContainer.innerHTML = "";
+    data.slice(0, 4).forEach((post, index) => {
+      const div = `
+        <div class="latest-post">
+          <img src="${post.image}" alt="Post Image">
+          <h3>Donate No: ${index + 1}</h3>
+          <p>${post.text.substring(0, 50)}...</p>
+        </div>`;
+      postContainer.innerHTML += div;
+    });
+  });
+
+// Visitor Counter (Local Example)
+if (!localStorage.getItem("visited")) {
+  localStorage.setItem("visited", "yes");
+  // Optionally notify server (Google Sheets) here
+}
+document.getElementById("visitorCount").textContent = Math.floor(Math.random() * 2000 + 100); // Fake count
+
+</script>
+<script src="script.js"></script>
+</body>
+</html>
